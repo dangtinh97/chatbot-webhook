@@ -5,8 +5,11 @@ const
     http = require('http'),
     express = require('express'),
     bodyParser = require('body-parser'), // creates express http server
-    app = express().use(bodyParser())
+    app = express();
+app.use(bodyParser.urlencoded({ extended: false }))
 
+// parse application/json
+app.use(bodyParser.json())
 let server = http.createServer(app)
 
 
