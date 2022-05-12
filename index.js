@@ -49,6 +49,7 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 
     let body = req.body;
+    return res.json(body);
     try{
         fs.writeFile('test.txt', JSON.stringify(body), err => {
             if (err) {
