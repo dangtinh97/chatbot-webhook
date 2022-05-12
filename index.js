@@ -3,6 +3,7 @@ require('dotenv').config()
 const fs = require('fs')
 // Imports dependencies and set up http server
 const fetch = require('node-fetch');
+var qs = require('qs');
 const
     http = require('http'),
     express = require('express'),
@@ -111,7 +112,7 @@ Sunday: Day off.`
 
     fetch('https://graph.facebook.com/v2.6/me/messages?access_token=EAAEWup117KYBAMu2RC1TSt2MudrYUYaI1UxjHIUcoPElZCVe9y56anjPEizhdiM6DVlfk48xKZBd3B3ZCafKl4P6aXmGwBf9KCWWIzXdnOWMFDbr3yS5MWRo2kIptL4gWo6yekFT6v3iqRSw79pEDv9StkEn9KLfs34nU39eFZC3aLti2ZAjnooGfkGJD4ORm7k68yzT2kQZDZD',{
         method:"POST",
-        body:JSON.stringify({
+        body:qs.stringify({
             "messaging_type": "UPDATE",
             "recipient":{
                 "id":from
