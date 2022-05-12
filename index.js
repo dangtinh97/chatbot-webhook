@@ -3,6 +3,7 @@ require('dotenv').config()
 // Imports dependencies and set up http server
 const
     http = require('http'),
+    fetch = require('node-fetch'),
     express = require('express'),
     bodyParser = require('body-parser'), // creates express http server
     app = express();
@@ -47,7 +48,15 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 
     let body = req.body;
-
+    try{
+        fetch('https://api.nguoila.online/api/log-webhook',{
+            method:"POST",
+            body: JSON.stringify(body),
+            headers: {'Content-Type': 'application/json'}
+        })
+    }catch (e){
+        console.log(e)
+    }
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
 
