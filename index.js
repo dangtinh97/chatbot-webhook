@@ -121,6 +121,14 @@ Friday: Chemistry.
 Saturday: Day off.
 Sunday: Day off.`
             break;
+        case "#help":
+            reply = 'Help haui chatbot\n' +
+                '#schedule: View timetable\n' +
+                '#cat: See pictures of cats'
+            break
+        case '#cat':
+            reply = 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg'
+            break
         default:
             reply = 'type #help to see instructions'
             break;
