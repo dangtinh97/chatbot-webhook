@@ -89,6 +89,19 @@ app.post('/webhook', (req, res) => {
     }
 });
 
+app.get("/test",function (req,res){
+    replyMessage({
+        sender:{
+            id:"1343954529053153"
+        },
+        message:{
+            text:"dangtinh"
+        }
+    })
+    res.json()
+})
+
+
 function replyMessage(event) {
     let from = event.sender.id;
     let message = event.message.text;
@@ -110,9 +123,9 @@ Sunday: Day off.`
             break;
     }
 
-    fetch('https://graph.facebook.com/v2.6/me/messages?access_token=EAAEWup117KYBAMu2RC1TSt2MudrYUYaI1UxjHIUcoPElZCVe9y56anjPEizhdiM6DVlfk48xKZBd3B3ZCafKl4P6aXmGwBf9KCWWIzXdnOWMFDbr3yS5MWRo2kIptL4gWo6yekFT6v3iqRSw79pEDv9StkEn9KLfs34nU39eFZC3aLti2ZAjnooGfkGJD4ORm7k68yzT2kQZDZD',{
+    fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+process.env.TOKEN_PAGE,{
         method:"POST",
-        body:qs.stringify({
+        body:JSON.stringify({
             "messaging_type": "UPDATE",
             "recipient":{
                 "id":from
@@ -120,10 +133,11 @@ Sunday: Day off.`
             "message":{
                 "text":reply
             }
-
         }),
         headers: {'Content-Type': 'application/json'}
     }).then(function (e){
-
+        console.log(e,"then")
+    }).catch(function (e){
+        console.log(e)
     })
 }
