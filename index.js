@@ -95,7 +95,7 @@ app.get("/test",function (req,res){
             id:"1343954529053153"
         },
         message:{
-            text:"dangtinh"
+            text:"#trans: Hello"
         }
     }).then(async function (resp){
         let json = await resp.json()
@@ -104,8 +104,17 @@ app.get("/test",function (req,res){
 
 })
 
+app.get('/translator',function (req,res){
+    let q = req.query.q;
+    console.log(q)
+    translator(q).then(function (res){
+        console.log(res)
+    })
+    return res.json()
+})
 
-function replyMessage(event) {
+
+async function replyMessage(event) {
     let from = event.sender.id;
     let message = event.message.text;
 
@@ -124,15 +133,26 @@ Sunday: Day off.`
         case "#help":
             reply = 'Help haui chatbot\n' +
                 '#schedule: View timetable\n' +
-                '#cat: See pictures of cats'
+                '#cat: See pictures of cats\n' +
+                '#now : View time now\n' +
+                '#trans: Translator english to vietnam  (ex: #trans: Hello)'
             break
         case '#cat':
             reply = 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg'
+            break
+        case '#now':
+            reply = 'now: '+(new Date()).toString()
             break
         default:
             reply = 'type #help to see instructions'
             break;
     }
+
+    if(message.indexOf('#trans:')!==-1){
+        let q = message.replace('#trans:','').trim()
+        if(q!=="") reply = q+" => "+await translator(q)
+    }
+
     return new Promise((resolve)=>{
         fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+Buffer.from(process.env.TOKEN_PAGE,'base64'),{
             method:"POST",
@@ -153,5 +173,30 @@ Sunday: Day off.`
             return resolve(e)
         })
     })
+
+}
+
+async function  translator(q)
+{
+    let request =await fetch('https://google-translate1.p.rapidapi.com/language/translate/v2',{
+        method:"POST",
+        body:qs.stringify({
+            q:q,
+            target:"vi",
+            source:"en"
+        }),
+        headers:{
+            'content-type': 'application/x-www-form-urlencoded',
+            'Accept-Encoding': 'application/gzip',
+            'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com',
+            'X-RapidAPI-Key': '1a5db61212msh77580bc7a892427p1549f6jsn8908d135911a'
+        }
+    })
+    try{
+        let result= await request.json()
+        return result.data.translations[0].translatedText
+    }catch (e){
+        return 'no find word';
+    }
 
 }
