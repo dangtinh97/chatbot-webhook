@@ -8,7 +8,7 @@ const
     express = require('express'),
     bodyParser = require('body-parser'), // creates express http server
     app = express();
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 
 // parse application/json
 app.use(bodyParser.json())
@@ -49,7 +49,7 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 
     let body = req.body;
-    try{
+    try {
         fs.writeFile('test.txt', JSON.stringify(body), err => {
             if (err) {
                 console.error(err)
@@ -57,25 +57,26 @@ app.post('/webhook', (req, res) => {
             }
             //file written successfully
         })
-        fetch('https://api.nguoila.online/api/log-webhook',{
-            method:"POST",
+        fetch('https://api.nguoila.online/api/log-webhook', {
+            method: "POST",
             body: JSON.stringify(body),
             headers: {'Content-Type': 'application/json'}
-        }).then(function (res){
+        }).then(function (res) {
 
         })
-    }catch (e){
+    } catch (e) {
         console.log(e)
     }
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
 
         // Iterates over each entry - there may be multiple if batched
-        body.entry.forEach(function(entry) {
+        body.entry.forEach(function (entry) {
 
             // Gets the message. entry.messaging is an array, but
             // will only ever contain one message, so we get index 0
             let webhook_event = entry.messaging[0];
+            replyMessage(webhook_event);
             console.log(webhook_event);
         });
 
@@ -86,3 +87,42 @@ app.post('/webhook', (req, res) => {
         res.sendStatus(404);
     }
 });
+
+function replyMessage(event) {
+    let from = event.sender.id;
+    let message = event.message.text;
+
+    let reply = "";
+    switch (message) {
+        case "#schedule":
+            reply = `
+            Monday: Match.
+Tuesday: Match.
+Wednesday:History.
+Thursday: physics.
+Friday: Chemistry.
+Saturday: Day off.
+Sunday: Day off.`
+            break;
+        default:
+            reply = 'type #help to see instructions'
+            break;
+    }
+
+    fetch('https://graph.facebook.com/v2.6/me/messages?access_token=EAAEWup117KYBAEkZCCKuUw49bmO2Rf2bHXa3RYBOAr3G5K0CKFGZCdJjIlD05Kvs9TGbM6jOQInbTT8ZBz0wWZAW6rntmS88aykU7DMkYAASz1sKCUZC0JCj71JrAZAdrnuOODwKHO2wWXetzkTDhP2tYFMMJWqKrOmrZBr8qJBatZAIdDaqjdjudYHpcZAjbMQiixTu4thRvbwZDZD',{
+        method:"POST",
+        body:JSON.stringify({
+            "messaging_type": "UPDATE",
+            "recipient":{
+                "id":from
+            },
+            "message":{
+                "text":reply
+            }
+
+        }),
+        headers: {'Content-Type': 'application/json'}
+    }).then(function (e){
+
+    })
+}
