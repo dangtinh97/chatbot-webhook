@@ -97,8 +97,11 @@ app.get("/test",function (req,res){
         message:{
             text:"dangtinh"
         }
+    }).then(async function (resp){
+        let json = await resp.json()
+        return res.json(json)
     })
-    res.json()
+
 })
 
 
@@ -122,22 +125,25 @@ Sunday: Day off.`
             reply = 'type #help to see instructions'
             break;
     }
-
-    fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+process.env.TOKEN_PAGE,{
-        method:"POST",
-        body:JSON.stringify({
-            "messaging_type": "UPDATE",
-            "recipient":{
-                "id":from
-            },
-            "message":{
-                "text":reply
-            }
-        }),
-        headers: {'Content-Type': 'application/json'}
-    }).then(function (e){
-        console.log(e,"then")
-    }).catch(function (e){
-        console.log(e)
+    return new Promise((resolve)=>{
+        fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+process.env.TOKEN_PAGE,{
+            method:"POST",
+            body:JSON.stringify({
+                "messaging_type": "UPDATE",
+                "recipient":{
+                    "id":from
+                },
+                "message":{
+                    "text":reply
+                }
+            }),
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (e){
+            return resolve(e)
+            console.log(e,"then")
+        }).catch(function (e){
+            return resolve(e)
+        })
     })
+
 }
