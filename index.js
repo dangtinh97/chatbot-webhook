@@ -2,12 +2,16 @@
 require('dotenv').config()
 // Imports dependencies and set up http server
 const
+    http = require('http'),
     express = require('express'),
-    bodyParser = require('body-parser'),
-    app = express().use(bodyParser.json()); // creates express http server
+    bodyParser = require('body-parser'), // creates express http server
+    app = express().use(bodyParser())
+
+let server = http.createServer(app)
+
 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 3000, () => console.log('webhook is listening'));
+server.listen(process.env.PORT || 3000, () => console.log('webhook is listening'));
 
 app.get('/webhook', (req, res) => {
 
