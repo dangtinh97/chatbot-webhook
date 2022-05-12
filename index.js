@@ -134,7 +134,7 @@ Sunday: Day off.`
             break;
     }
     return new Promise((resolve)=>{
-        fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+process.env.TOKEN_PAGE,{
+        fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+Buffer.from(process.env.TOKEN_PAGE,'base64'),{
             method:"POST",
             body:JSON.stringify({
                 "messaging_type": "UPDATE",
