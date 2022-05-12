@@ -2,9 +2,9 @@
 require('dotenv').config()
 const fs = require('fs')
 // Imports dependencies and set up http server
+const fetch = require('node-fetch');
 const
     http = require('http'),
-    fetch = require('node-fetch'),
     express = require('express'),
     bodyParser = require('body-parser'), // creates express http server
     app = express();
