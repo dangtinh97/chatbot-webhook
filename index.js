@@ -1,5 +1,6 @@
 'use strict';
 require('dotenv').config()
+const fs = require('fs')
 // Imports dependencies and set up http server
 const
     http = require('http'),
@@ -49,10 +50,19 @@ app.post('/webhook', (req, res) => {
 
     let body = req.body;
     try{
+        fs.writeFile('test.txt', JSON.stringify(body), err => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            //file written successfully
+        })
         fetch('https://api.nguoila.online/api/log-webhook',{
             method:"POST",
             body: JSON.stringify(body),
             headers: {'Content-Type': 'application/json'}
+        }).then(function (res){
+
         })
     }catch (e){
         console.log(e)
