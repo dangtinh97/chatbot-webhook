@@ -48,16 +48,8 @@ app.get('/webhook', (req, res) => {
 });
 
 app.post('/webhook', (req, res) => {
-
     let body = req.body;
     try {
-        fs.writeFile('test.txt', JSON.stringify(body), err => {
-            if (err) {
-                console.error(err)
-                return
-            }
-            //file written successfully
-        })
         fetch('https://api.nguoila.online/api/log-webhook', {
             method: "POST",
             body: JSON.stringify(body),
@@ -68,6 +60,8 @@ app.post('/webhook', (req, res) => {
     } catch (e) {
         console.log(e)
     }
+
+    return res.status(200).send('EVENT_RECEIVED');
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
 
