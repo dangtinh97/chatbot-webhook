@@ -120,22 +120,13 @@ async function replyMessage(event) {
 
     let reply = "";
     switch (message) {
-        case "#schedule":
-            reply = `
-            Monday: Match.
-Tuesday: Match.
-Wednesday:History.
-Thursday: physics.
-Friday: Chemistry.
-Saturday: Day off.
-Sunday: Day off.`
-            break;
         case "#help":
             reply = 'Help haui chatbot\n' +
                 '#schedule: View timetable\n' +
                 '#cat: See pictures of cats\n' +
                 '#now : View time now\n' +
-                '#trans: Translator english to vietnam  (ex: #trans: Hello)'
+                '#trans: Translator english to vietnam  (ex: #trans: Hello)\n' +
+                '=a+b-c math with +/- (ex: =1-2+3)'
             break
         case '#cat':
             reply = 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg'
@@ -151,6 +142,18 @@ Sunday: Day off.`
     if(message.indexOf('#trans:')!==-1){
         let q = message.replace('#trans:','').trim()
         if(q!=="") reply = q+" => "+await translator(q)
+    }
+
+    if(message.indexOf('#schedule'))
+    {
+        let code = message.replace('#trans:','').trim()
+        if(code !== "") reply = schedule(code)
+    }
+
+
+    if(message.indexOf('=')===0){
+        let code = message.replace('=','').trim()
+        if(code !== "") reply = code+"="+addbits(code)
     }
 
     return new Promise((resolve)=>{
@@ -200,3 +203,52 @@ async function  translator(q)
     }
 
 }
+
+function schedule(code)
+{
+    let list = ['math','music','history','chemistry','physics','Information Technology'];
+    let data = {
+        '1041040272':list,
+        '1041040273':shuffle(list),
+        '1041040274':shuffle(list),
+        '1041040275':shuffle(list),
+        '1041040276':shuffle(list),
+        '1041040277':shuffle(list),
+    }
+
+    if(typeof data[code]==="undefined") return "Không có dữ liệu."
+
+    return data[code].join(' - ')
+
+
+}
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex !== 0) {
+
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+function addbits(s) {
+    var total = 0;
+
+    s = s.match(/[+\-]*(\.\d+|\d+(\.\d+)?)/g) || [];
+
+    while (s.length) {
+        total += parseFloat(s.shift());
+    }
+    return total;
+}
+
+
