@@ -146,7 +146,7 @@ async function replyMessage(event) {
 
     if(message.indexOf('#schedule')!==-1)
     {
-        let code = message.replace('#trans:','').trim()
+        let code = message.replace('#schedule:','').trim()
         if(code !== "") reply = schedule(code)
     }
 
