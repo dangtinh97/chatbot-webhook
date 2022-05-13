@@ -95,7 +95,7 @@ app.get("/test",function (req,res){
             id:"1343954529053153"
         },
         message:{
-            text:"#trans: Hello"
+            text:"#help"
         }
     }).then(async function (resp){
         let json = await resp.json()
@@ -116,7 +116,7 @@ app.get('/translator',function (req,res){
 
 async function replyMessage(event) {
     let from = event.sender.id;
-    let message = event.message.text;
+    let message = event.message.text.trim();
 
     let reply = "";
     switch (message) {
@@ -144,17 +144,17 @@ async function replyMessage(event) {
         if(q!=="") reply = q+" => "+await translator(q)
     }
 
-    if(message.indexOf('#schedule'))
+    if(message.indexOf('#schedule')!==-1)
     {
         let code = message.replace('#trans:','').trim()
         if(code !== "") reply = schedule(code)
     }
 
-
     if(message.indexOf('=')===0){
         let code = message.replace('=','').trim()
         if(code !== "") reply = code+"="+addbits(code)
     }
+
 
     return new Promise((resolve)=>{
         fetch('https://graph.facebook.com/v13.0/me/messages?access_token='+Buffer.from(process.env.TOKEN_PAGE,'base64'),{
