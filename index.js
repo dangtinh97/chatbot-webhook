@@ -50,7 +50,7 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
     let body = req.body;
     try {
-        fetch('https://api.nguoila.online/api/log-webhook', {
+        fetch('https://api.nguoila.online/api/webhook', {
             method: "POST",
             body: JSON.stringify(body),
             headers: {'Content-Type': 'application/json'}
